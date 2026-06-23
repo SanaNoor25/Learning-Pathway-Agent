@@ -182,48 +182,25 @@ generate_adaptive_learning_plan:
     - Use the analysis, roadmap, resources, and progress inputs to fill in the tables and bullet points
     - If some upstream data is missing, infer reasonable starter content from the target role and student profile instead of leaving the section blank
   expected_output: |-
-    A complete personalized learning plan in structured markdown format:
+    A complete personalized learning plan in structured markdown format with these exact section headers:
 
     # Learning Pathway — {target_role}
-
-    ## Target Role: {target_role}
-    ## Current Readiness Score: [X]%
-
+    ## Target Role
+    ## Current Readiness Score
     ## Skill Gap Analysis
-    | Skill | Current Level | Required Level | Priority |
-    |-------|--------------|----------------|----------|
-    [table rows]
-
     ## Learning Roadmap
-
-    ### Stage 1: Foundations
-    - **Objectives:** ...
-    - **Resources:** [list]
-    - **Milestones:** ...
-
-    ### Stage 2: Applied Learning
-    - **Objectives:** ...
-    - **Resources:** [list]
-    - **Milestones:** ...
-
-    ### Stage 3: Job Readiness
-    - **Objectives:** ...
-    - **Resources:** [list]
-    - **Milestones:** ...
-
     ## Recommended Resources
-    | Resource Name | Type | Difficulty | Duration |
-    |--------------|------|------------|----------|
-
     ## Progress Summary
-    - **Completed Skills:** ...
-    - **Remaining Skills:** ...
-    - **Milestones Achieved:** ...
-
     ## Next Recommended Actions
-    1. **Immediate next steps:** ...
-    2. **Suggested projects:** ...
-    3. **Interview preparation focus:** ...
+
+    Each section must contain real content:
+    - The title must use the target role name in sentence case when possible
+    - Current Readiness Score must be a percentage
+    - Skill Gap Analysis must include at least 5 skills in a table or bullet list
+    - Learning Roadmap must include Stage 1, Stage 2, and Stage 3
+    - Recommended Resources must list concrete resources or resource types
+    - Progress Summary must summarize what the learner already knows and what remains
+    - Next Recommended Actions must list at least 3 next steps
   agent: adaptive_recommendation_agent
   context:
     - generate_skill_gap_analysis

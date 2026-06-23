@@ -40,7 +40,9 @@ class LearningPathwayAgentCrew:
             max_execution_time=None,
             llm=LLM(
                 model="openrouter/mistralai/ministral-8b-2512",
-                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip()
+                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip(),
+                max_tokens=2000,
+                temperature=0.3
                 
             ),
             
@@ -67,7 +69,9 @@ class LearningPathwayAgentCrew:
             max_execution_time=None,
             llm=LLM(
                 model="openrouter/mistralai/ministral-8b-2512",
-                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip()
+                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip(),
+                max_tokens=2000,
+                temperature=0.3
                 
             ),
             
@@ -94,7 +98,9 @@ class LearningPathwayAgentCrew:
             max_execution_time=None,
             llm=LLM(
                 model="openrouter/mistralai/ministral-8b-2512",
-                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip()
+                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip(),
+                max_tokens=2000,
+                temperature=0.3
                 
             ),
             
@@ -121,7 +127,9 @@ class LearningPathwayAgentCrew:
             max_execution_time=None,
             llm=LLM(
                 model="openrouter/mistralai/ministral-8b-2512",
-                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip()
+                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip(),
+                max_tokens=2000,
+                temperature=0.3
                 
             ),
             
@@ -147,8 +155,10 @@ class LearningPathwayAgentCrew:
             
             max_execution_time=None,
             llm=LLM(
-                model="openrouter/google/gemma-3-27b-it",
-                api_key=os.getenv("OPENROUTER_API_KEY_2", "").strip()
+                model="openrouter/mistralai/ministral-8b-2512",
+                api_key=os.getenv("OPENROUTER_API_KEY_2", "").strip(),
+                max_tokens=3000,
+                temperature=0.3
                 
             ),
             
@@ -224,7 +234,7 @@ class LearningPathwayAgentCrew:
     def generate_adaptive_learning_plan(self) -> Task:
         return Task(
             config=self.tasks_config["generate_adaptive_learning_plan"],
-            markdown=False,
+            markdown=True,
             
             
         )
@@ -242,8 +252,8 @@ class LearningPathwayAgentCrew:
 
             chat_llm=LLM(
                 model="openrouter/openai/gpt-4o-mini",
-                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip()
+                api_key=os.getenv("OPENROUTER_API_KEY_1", "").strip(),
+                max_tokens=1500,
                 ),
         )
-
 
