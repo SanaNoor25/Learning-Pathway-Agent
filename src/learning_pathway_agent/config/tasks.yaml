@@ -1,0 +1,232 @@
+﻿---
+retrieve_target_role_requirements:
+  description: |-
+    Query the Shared Role Catalog to retrieve the full requirements for the student's selected target role: {target_role}.
+
+    Fetch:
+    - Required skills and competencies
+    - Skill proficiency expectations for each skill
+    - Role description and career progression information
+    - Any prerequisite knowledge areas
+
+    The target role catalog data may be provided as part of the input context: {role_catalog_data}
+  expected_output: |-
+    A structured role requirement profile containing:
+    - Role name and description
+    - Complete list of required skills with expected proficiency levels (beginner/intermediate/advanced/expert)
+    - Recommended competencies beyond minimum requirements
+    - Career progression context (what comes before and after this role)
+  agent: skill_gap_analyst
+
+analyze_student_profile:
+  description: |-
+    Evaluate the student's capabilities using the provided structured profile.
+
+    Student profile:
+    {student_profile}
+
+    Extract:
+    - current skills
+    - proficiency levels
+    - education stage
+    - completed courses
+    - learning preferences
+    - certifications
+
+    Also consider progress history if available.
+  expected_output: |-
+    A structured capability profile with:
+    - confirmed skills
+    - proficiency levels
+    - education stage
+    - learning summary
+  agent: skill_gap_analyst
+
+process_interview_feedback:
+  description: |-
+    Analyze interview-related data from the student profile.
+
+    Input:
+    {student_profile}
+
+    Extract:
+    - weaknesses
+    - communication issues
+    - technical gaps
+    - behavioral issues
+
+    Map them to skills where possible.
+  expected_output: |-
+    Prioritized interview improvement areas mapped to skills.
+  agent: skill_gap_analyst
+
+generate_skill_gap_analysis:
+  description: |-
+    Compare the student's current capability profile against the target role requirements and interview feedback to produce a comprehensive, prioritized skill-gap analysis.
+
+    Actions:
+    1. Map each required skill from the role profile against the student's current skill levels
+    2. Calculate the gap size (delta between current and required proficiency)
+    3. Factor in interview feedback to boost priority of skills frequently tested in interviews
+    4. Rank all gaps by: impact on role readiness, interview frequency, and estimated learning effort
+    5. Compute an overall Current Readiness Score as a percentage
+
+    Combine insights from the role requirement profile, current capability profile, and interview-based improvement opportunities.
+
+    IMPORTANT:
+    - Return a detailed, human-readable analysis, not a one-line summary
+    - Include an actual readiness score estimate
+    - Include a short explanation for the top 5 priority gaps
+  expected_output: |-
+    A prioritized skill-gap analysis document containing:
+    - Current Readiness Score (percentage toward target role readiness)
+    - Table of all skills with: current level, required level, gap size, priority (High/Medium/Low), estimated learning effort (hours/weeks)
+    - Categorized gaps: Missing skills (not yet started), Weak skills (below required level), Interview-flagged skills (highlighted by feedback)
+    - Top 5 highest-priority skills to address immediately
+  agent: skill_gap_analyst
+  context:
+    - retrieve_target_role_requirements
+    - analyze_student_profile
+    - process_interview_feedback
+
+build_learning_roadmap:
+  description: |-
+    Transform the prioritized skill-gap analysis into a structured, multi-stage learning roadmap.
+
+    Organize all skills to learn into 3 stages:
+    - Stage 1 (Foundations): Core concepts, fundamental skills, required prerequisites
+    - Stage 2 (Applied Learning): Intermediate concepts, hands-on exercises, guided projects
+    - Stage 3 (Job Readiness): Portfolio projects, mock interviews, advanced topics, industry best practices
+
+    For each stage:
+    1. Define clear learning objectives
+    2. Sequence skills respecting dependencies (never place advanced topics before prerequisites)
+    3. Set measurable milestones to mark stage completion
+    4. Estimate realistic timelines based on effort estimates from the skill-gap analysis
+    5. Ensure high-priority and interview-flagged skills are addressed in the earliest appropriate stage
+
+    IMPORTANT:
+    - Produce an actual roadmap with stage-by-stage content
+    - Do not respond with only a heading or short summary
+    - Include dependencies, milestones, and a duration estimate for each stage
+  expected_output: |-
+    A structured multi-stage learning roadmap containing:
+    - Stage 1 (Foundations): objectives, skill list, dependencies, milestones, estimated duration
+    - Stage 2 (Applied Learning): objectives, skill list, hands-on project suggestions, milestones, estimated duration
+    - Stage 3 (Job Readiness): objectives, advanced topics, portfolio project ideas, interview prep focus, milestones, estimated duration
+    - Overall timeline estimate from current state to job readiness
+    - Clear entry and exit criteria for each stage
+  agent: learning_path_planner
+  context:
+    - generate_skill_gap_analysis
+
+curate_learning_resources:
+  description: |-
+    Curate learning resources for the roadmap using available inputs.
+
+    Student profile:
+    {student_profile}
+
+    Role requirements:
+    {role_catalog_data}
+
+    Select best resources per skill and stage.
+
+    IMPORTANT:
+    - Return concrete resource suggestions, not generic advice
+    - Include 2-3 resources per major skill or stage when possible
+    - Mention why each resource fits the learner level
+  expected_output: |-
+    Structured resource recommendations grouped by stage and skill.
+  agent: resource_recommendation_agent
+  context:
+    - build_learning_roadmap
+    - analyze_student_profile
+
+track_and_update_progress:
+  description: |-
+    Evaluate the student's current progress against the learning roadmap and produce an updated progress summary.
+
+    Use the student's current profile and the roadmap to estimate completion, remaining gaps, and next actions.
+  expected_output: |-
+    An updated progress report containing:
+    - Per-stage completion percentage (Stage 1, 2, 3)
+    - Per-skill completion status (Not Started / In Progress / Completed)
+    - Newly achieved milestones since last update
+    - Remaining skill gaps with updated effort estimates
+    - Skills at risk (stalled or behind pace)
+    - Skills ahead of schedule (potential to advance early)
+    - Recommended next immediate actions based on current progress
+  agent: progress_tracking_agent
+  context:
+    - build_learning_roadmap
+    - curate_learning_resources
+
+generate_adaptive_learning_plan:
+  description: |-
+    Synthesize all outputs — skill-gap analysis, learning roadmap, curated resources, and progress tracking — into a final, personalized, adaptive learning plan. Then apply adaptive intelligence to optimize it.
+
+    Adaptive actions:
+    1. Analyze performance patterns from progress data and interview feedback to detect learning bottlenecks
+    2. Adjust skill priorities if new interview feedback reveals urgent gaps
+    3. Re-sequence or re-weight roadmap stages if progress data shows acceleration or difficulty
+    4. Recommend the top 3 immediate next actions the student should take right now
+    5. Suggest 1-2 portfolio projects aligned to their current stage and target role
+    6. Define interview preparation focus areas based on identified weaknesses
+
+    Produce the complete final output in the specified structured format.
+
+    IMPORTANT:
+    - Return full markdown with all sections populated
+    - Do not output only the title
+    - Use the analysis, roadmap, resources, and progress inputs to fill in the tables and bullet points
+    - If some upstream data is missing, infer reasonable starter content from the target role and student profile instead of leaving the section blank
+  expected_output: |-
+    A complete personalized learning plan in structured markdown format:
+
+    # Learning Pathway — {target_role}
+
+    ## Target Role: {target_role}
+    ## Current Readiness Score: [X]%
+
+    ## Skill Gap Analysis
+    | Skill | Current Level | Required Level | Priority |
+    |-------|--------------|----------------|----------|
+    [table rows]
+
+    ## Learning Roadmap
+
+    ### Stage 1: Foundations
+    - **Objectives:** ...
+    - **Resources:** [list]
+    - **Milestones:** ...
+
+    ### Stage 2: Applied Learning
+    - **Objectives:** ...
+    - **Resources:** [list]
+    - **Milestones:** ...
+
+    ### Stage 3: Job Readiness
+    - **Objectives:** ...
+    - **Resources:** [list]
+    - **Milestones:** ...
+
+    ## Recommended Resources
+    | Resource Name | Type | Difficulty | Duration |
+    |--------------|------|------------|----------|
+
+    ## Progress Summary
+    - **Completed Skills:** ...
+    - **Remaining Skills:** ...
+    - **Milestones Achieved:** ...
+
+    ## Next Recommended Actions
+    1. **Immediate next steps:** ...
+    2. **Suggested projects:** ...
+    3. **Interview preparation focus:** ...
+  agent: adaptive_recommendation_agent
+  context:
+    - generate_skill_gap_analysis
+    - build_learning_roadmap
+    - curate_learning_resources
+    - track_and_update_progress
